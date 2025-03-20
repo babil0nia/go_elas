@@ -118,7 +118,7 @@ erDiagram
         VARCHAR(100) email
         VARCHAR(80) senha
         VARCHAR(15) telefone
-        ENUM("Prestadora", "Cliente")
+        ENUM(Prestadora, Cliente)
         VARCHAR(60) rua
         VARCHAR(45) bairro
         VARCHAR(20) cep
