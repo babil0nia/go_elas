@@ -112,55 +112,81 @@ docker compose up --build
 ## Banco de dados
 ```mermaid
 erDiagram
-    usuarios {
-        int id PK
-        string nome
-        string email
-        string senha
-        string telefone
-        enum tipo
-        string rua
-        string bairro
-        int cep
-        string cpf
-        timestamp datacriacao
-    }
-    
-    favorito {
-        int idfavorito PK
-        int idclientefavoritou
-        int idprestadorfavorito
-        datetime datafavoritamento
-    }
-    
-    servicos {
-        int idservicos PK
-        text descricao
-        decimal preco
-        string titulo
-        timestamp datacriacao
-        string categoria
-        int idfavorito
-    }
-    
-    contratacao {
-        int idcontratacao PK
-        int usuarios_id
-        int idservicos
-        string status
-        timestamp datacontratacao
-        text comentarios
-    }
-    
-    avaliacao {
-        int idavaliacao PK
-        int idcontratacao
-        int nota
+    usuario {
+        INT idusuario PK
+        VARCHAR(100) nome
+        VARCHAR(100) email
+        VARCHAR(80) senha
+        VARCHAR(15) telefone
+        ENUM("Prestadora", "Cliente") tipo
+        VARCHAR(60) rua
+        VARCHAR(45) bairro
+        VARCHAR(20) cep
+        TIMESTAMP datacriacao
+        CHAR(14) documento
+        VARCHAR(500) portfolio
+        VARCHAR(45) genero
     }
 
-    usuarios ||--o{ favorito : "idclientefavoritou"
-    usuarios ||--o{ favorito : "idprestadorfavorito"
-    favorito ||--o{ servicos : "idfavorito"
-    usuarios ||--o{ contratacao : "usuarios_id"
-    servicos ||--o{ contratacao : "idservicos"
-    contratacao ||--o{ avaliacao : "idcontratacao"
+    favorito {
+        INT idfavorito PK
+        INT idservicos FK
+        INT idusuario FK
+        DATETIME datafavoritamento
+    }
+
+    servicos {
+        INT idservicos PK
+        TEXT descricao
+        DECIMAL preco
+        VARCHAR(70) titulo
+        TIMESTAMP datacriacao_servico
+        VARCHAR(100) categoria
+        INT idfavorito FK
+    }
+
+    contratacao {
+        INT idcontratacao PK
+        INT idusuario FK
+        INT idservicos FK
+        VARCHAR(20) status DEFAULT 'pendente'
+        TIMESTAMP datacontratacao
+        VARCHAR(500) comentarios
+    }
+
+    contratacao_has_usuarios {
+        INT contratacao_idcontratacao PK, FK
+        INT usuarios_id PK, FK
+    }
+
+    avaliacao {
+        INT idavaliacao PK
+        INT idcontratacao FK
+        INT nota DEFAULT 1
+    }
+
+    calendario {
+        INT idevento PK
+        ENUM('365', '366') num_dias
+    }
+
+    interacao_ia {
+        INT idinteracao PK
+        INT idusuario FK
+        TEXT pergunta
+        TEXT resposta
+        TIMESTAMP data_interacao
+    }
+
+    usuario --o{ favorito : "salva"
+    usuario --o{ contratacao : "contrata"
+    usuario --o{ avaliacao : "avalia"
+    usuario --o{ contratacao_has_usuarios : "participa"
+    usuario --o{ interacao_ia : "realiza"
+    servicos --o{ contratacao : "inclui"
+    servicos --o{ favorito : "favoritado"
+    contratacao --o{ avaliacao : "recebe"
+    contratacao --o{ contratacao_has_usuarios : "associa"
+    favorito --o{ servicos : "referencia"
+    calendario --o{ usuario : "consulta"
+    interacao_ia }|-- usuario : "pertence"
