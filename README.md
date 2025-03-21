@@ -111,7 +111,6 @@ docker compose up --build
   
 ## Banco de dados
 ```mermaid
-erDiagram
     usuario {
         int idusuario PK
         string nome
@@ -130,33 +129,32 @@ erDiagram
 
     favorito {
         int idfavorito PK
-        int idservicos FK
+        int idservico FK
         int idusuario FK
         datetime datafavoritamento
     }
 
-    servicos {
-        int idservicos PK
+    servico {
+        int idservico PK
         text descricao
         decimal preco
         string titulo
-        timestamp datacriacao_servico
+        timestamp datacriacao
         string categoria
-        int idfavorito FK
     }
 
     contratacao {
         int idcontratacao PK
         int idusuario FK
-        int idservicos FK
+        int idservico FK
         string status DEFAULT "pendente"
         timestamp datacontratacao
         string comentarios
     }
 
-    contratacao_has_usuarios {
-        int contratacao_idcontratacao PK, FK
-        int usuarios_id PK, FK
+    contratacao_has_usuario {
+        int idcontratacao PK, FK
+        int idusuario PK, FK
     }
 
     avaliacao {
@@ -170,14 +168,14 @@ erDiagram
         int idusuario FK
         text pergunta
         text resposta
-        timestamp data_interacao
+        timestamp datainteracao
     }
 
-    usuario --o{ favorito : "tem"
-    usuario --o{ contratacao : "realiza"
-    servicos --o{ contratacao : "é contratado"
-    favorito --|{ servicos : "favorece"
-    contratacao --o{ avaliacao : "recebe"
-    usuario --o{ interacao_ia : "interage"
-    contratacao --|{ contratacao_has_usuarios : "envolve"
-    usuario --|{ contratacao_has_usuarios : "participa"
+    usuario ||--o{ favorito : "tem"
+    usuario ||--o{ contratacao : "realiza"
+    servico ||--o{ contratacao : "é contratado"
+    favorito }|--|| servico : "favorece"
+    contratacao ||--o{ avaliacao : "recebe"
+    usuario ||--o{ interacao_ia : "interage"
+    contratacao ||--|{ contratacao_has_usuario : "envolve"
+    usuario ||--|{ contratacao_has_usuario : "participa"
