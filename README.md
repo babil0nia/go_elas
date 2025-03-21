@@ -173,12 +173,11 @@ erDiagram
         timestamp data_interacao
     }
 
-    usuario --o{ favorito : "idusuario"
-    usuario --o{ favorito : "idservicos"
-    favorito --|{ servicos : "idfavorito"
-    usuario --o{ contratacao : "idusuario"
-    servicos --o{ contratacao : "idservicos"
-    contratacao --o{ avaliacao : "idcontratacao"
-    usuario --o{ interacao_ia : "idusuario"
-    contratacao --|{ contratacao_has_usuarios : "idcontratacao"
-    usuario ||--|{ contratacao_has_usuarios : "usuarios_id"
+    usuario --o{ favorito : "tem"
+    usuario --o{ contratacao : "realiza"
+    servicos --o{ contratacao : "é contratado"
+    favorito --|{ servicos : "favorece"
+    contratacao --o{ avaliacao : "recebe"
+    usuario --o{ interacao_ia : "interage"
+    contratacao --|{ contratacao_has_usuarios : "envolve"
+    usuario --|{ contratacao_has_usuarios : "participa"
